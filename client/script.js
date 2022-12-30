@@ -26,7 +26,7 @@ function typeText(element, text) {
     //if user typing
     if (index < text.length) {
       //get the character under specific index in the text that AI return
-      element.innerHTML += text.chartAt(index);
+      element.innerHTML += text.charAt(index);
       index++;
     } else {
       // if we reached the end of the text
@@ -88,6 +88,33 @@ const handleSubmit = async (e) => {
 
   //turn on the loader
   loader(messageDiv);
+
+  //fetch the data from the server -> get bot's response
+  const response = await fetch('http://localhost:5000', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      prompt: data.get('prompt'), // message comming from textarea element
+    }),
+  });
+  clearInterval(loadInterval);
+  messageDiv.innerHTML = '';
+
+  if (response.ok) {
+    const data = await response.json(); //give the actual response from the backend
+    const parseData = data.bot.trim();
+
+    console.log(parseData);
+
+    typeText(messageDiv, parseData);
+  } else {
+    const err = await response.text();
+    messageDiv.innerHTML = 'Something went wrong';
+
+    alert(err);
+  }
 };
 
 form.addEventListener('submit', handleSubmit);
