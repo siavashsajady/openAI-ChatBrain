@@ -34,3 +34,12 @@ function typeText(element, text) {
     }
   }, 20);
 }
+
+// generate a unique ID for every single message
+function generateUniquedId() {
+  const timestamp = Date.now();
+  const randomNumber = Math.random();
+  const hexsadecimalString = randomNumber.toString(16);
+
+  return `id-${timestamp}-${hexsadecimalString}`;
+}
